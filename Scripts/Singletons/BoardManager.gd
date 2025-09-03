@@ -1,37 +1,51 @@
 extends Node
 
+## Сигнал подготовки доски
 signal prepare_board
+## Сигнал подтверждения хода
 signal move_accepted
 
+## Все выигрышные ряды
 @onready var win_patterns: Array = calculate_win_patterns()
+## Доска крестиков
 @onready var crosses_board: int = 0
+## Доска ноликов
 @onready var noughts_board: int = 0
+## Начата ли игра
 @onready var game_started: bool = false
+## Кто делает ход
 @onready var turn: bool = true
+## Игрок
 @onready var player: bool = true
 
+## Все настройки режима игры
 enum GAMEMODE {
 	PvP_PC,
 	PvE,
 	EvE
 }
 
+## Все настройки первого хода
 enum FIRST_MOVE {
 	RANDOM,
 	ENEMY,
 	YOU
 }
-
+## Сложность игры
 var difficulty: int = 0
+## Размер доски по горизонтали или вертикали, площадь доски равна board_size * board_size
 var board_size: int = 5
+## Длина выигрышной линии
 var win_length: int = 4
+## Текущий режим игры
 var current_mode: GAMEMODE
+## Текущий первый ход
 var current_first_move: FIRST_MOVE
 
 func _ready():
-	print(noughts_board)
-	print(turn)
 	prepare_board.connect(_on_prepare_board)
+
+## Считает все выигрышные ряды
 func calculate_win_patterns() -> Array:
 	
 	var patterns: Array = []
@@ -76,7 +90,8 @@ func calculate_win_patterns() -> Array:
 			patterns.append(pattern)
 	return patterns
 
-func bitboard_to_board(bitboard: int):
+## Переводит битборд в строку
+func bitboard_to_board(bitboard: int) -> String:
 	var bit_array: Array = []
 	var result: String = ""
 	var transfer_counter: int = 0
@@ -92,19 +107,23 @@ func bitboard_to_board(bitboard: int):
 			result += "\n"
 			transfer_counter = 0
 	return result
-	
+
+## Проверяет закончена ли игра
 func is_game_over() -> bool:
 	return game_state() != "Continue"
-	
+
+## Проверяет победа ли это для доски, какого-либо игрока в аргументах
 func is_win(board: int) -> bool:
 	for pattern in win_patterns:
 		if (board & pattern) == pattern:
 			return true
 	return false
-	
+
+## Проверяет ничья ли это
 func is_draw(crosses_board: int, noughts_board: int):
 	return (crosses_board | noughts_board) == 0b111111111
-	
+
+## Показывает состояние игры
 func game_state() -> String:
 	if is_win(crosses_board):
 		return "Crosses_win"
@@ -114,7 +133,8 @@ func game_state() -> String:
 		return "Draw"
 	else:
 		return "Continue"
-
+		
+## Подсчитывает сколько битов "1" в битборде
 func count_bits(n: int) -> int:
 	var count = 0
 	while n != 0:
@@ -122,10 +142,8 @@ func count_bits(n: int) -> int:
 		n >>= 1
 	return count 
 
-
-
+## Делает ход 
 func make_a_move(bit: int):
-	print("Бит: ", bit)
 	if current_mode != GAMEMODE.PvP_PC:
 		match turn:
 			true:
@@ -149,7 +167,8 @@ func make_a_move(bit: int):
 		var best_move = MaxArtificialIntelligence.find_best_move(crosses_board, noughts_board, not player, difficulty)
 		print("Лучший ход: ", best_move)
 		accept_move(best_move)
-	
+
+## Проверяет можно ли сделать ход по правилам
 func accept_move(bit: int):
 	
 	if not game_started:
@@ -173,36 +192,30 @@ func accept_move(bit: int):
 	make_a_move(bit)
 	return true
 
+## Вызывается при подготовке доски
 func _on_prepare_board():
-	print("Первый ход: ", current_first_move)
+	
 	win_patterns = calculate_win_patterns()
-#	match current_first_move:
-#		FIRST_MOVE.RANDOM:
-#			player = true if randf() <= 0.5 else false
-#			turn = true if randf() <= 0.5 else false
-#		FIRST_MOVE.ENEMY:
-#			player = true if randf() <= 0.5 else false
-#			turn = not player
-#		FIRST_MOVE.YOU:
-#			player = true if randf() <= 0.5 else false
-#			turn = player
-	if current_first_move == FIRST_MOVE.RANDOM:
-		player = randf() < 0.5
-		turn = randf() < 0.5
-	elif current_first_move == FIRST_MOVE.ENEMY:
-		player = randf() < 0.5
-		turn = not player
-	elif current_first_move == FIRST_MOVE.YOU:
-		player = randf() < 0.5
-		turn = player
-	else:
-		push_error("Неизвестный режим первого хода: ", current_first_move)
+	
+	match current_first_move:
+		FIRST_MOVE.RANDOM:
+			player = randf() < 0.5
+			turn = randf() < 0.5
+		FIRST_MOVE.ENEMY:
+			player = randf() < 0.5
+			turn = not player
+		FIRST_MOVE.YOU:
+			player = randf() < 0.5
+			turn = player
+		_:
+			push_error("Неизвестный режим первого хода: ", current_first_move)
+	
+	# Обнуляем доски и задаем состояние игры как начато
 	game_started = true
 	crosses_board = 0
 	noughts_board = 0
-	print("Подготовка игры...")
-	await get_tree().create_timer(0.1).timeout
+	## ИИ делает ход, если у нее очередь ходить
 	if turn != player and current_mode == GAMEMODE.PvE:
-		var best_move = MaxArtificialIntelligence.find_best_move(crosses_board, noughts_board, not player, 2)
-		print("Лучший ход: ", best_move)
+		await get_tree().process_frame
+		var best_move = await MaxArtificialIntelligence.find_best_move(crosses_board, noughts_board, not player, 2)
 		accept_move(best_move)

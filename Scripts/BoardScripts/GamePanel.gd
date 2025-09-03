@@ -2,7 +2,9 @@ extends Control
 
 @onready var board = $Board 
 @onready var players_panel = $PlayersPanel
-
+@onready var buttons_normal_style: StyleBoxFlat = load("res://Themes/Buttons_themes/Buttons_normal_style_box_flat.tres")
+@onready var buttons_hover_style: StyleBoxFlat = load("res://Themes/Buttons_themes/Buttons_hover_style_box_flat.tres")
+@onready var buttons_pressed_style: StyleBoxFlat = load("res://Themes/Buttons_themes/Buttons_pressed_style_box_flat.tres")
 func _ready():
 	create_board()
 	BoardManager.prepare_board.connect(_on_prepare_board)
@@ -12,6 +14,7 @@ func _ready():
 ## Генерирует доску
 func create_board():
 	
+#	Удаляем все клетки доски, для создания новых
 	for child in board.get_children():
 		child.queue_free()
 	
@@ -19,13 +22,24 @@ func create_board():
 	
 	for i in range(int(pow(BoardManager.board_size, 2))):
 		var button = Button.new()
+#		Задаем имя
 		button.name = "Cell"
+#		Задаем размер шрифта
 		button.add_theme_font_size_override("font_size", 60)
+#		Задаем минимальный размер
 		button.custom_minimum_size = Vector2(100, 100)
+#		Задаем флаги
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		
+#		button.add_theme_stylebox_override("normal", buttons_normal_style)
+#		button.add_theme_stylebox_override("hover", buttons_hover_style)
+#		button.add_theme_stylebox_override("pressed", buttons_pressed_style)
+#		Задаем стиль
 		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+#		Подключаем к кнопкам доски сигнал с их индексом в аргументаз
 		button.pressed.connect(_on_button_pressed.bind(i))
+#		Добавляем в сцену
 		board.add_child(button)
 
 ## Выводит позицию на доску
@@ -44,19 +58,12 @@ func draw_position():
 			button.text = ""
 			
 func _on_button_pressed(button_index: int):
-	print("Нажата клетка ", 1 << int((pow(BoardManager.board_size, 2) - button_index)))
 	var bit_position = int(pow(BoardManager.board_size, 2)) - 1 - button_index
 	BoardManager.accept_move(bit_position)
-#	BoardManager.accept_move(1 << int((pow(BoardManager.board_size, 2) - button_index)))
 	
 
 func _on_prepare_board():
 	create_board()
 
 func _on_move_accepted():
-	print("Move accepted")
 	draw_position()
-
-#
-#func _on_timer_timeout():
-#	draw_position()
