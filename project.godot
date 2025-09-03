@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 BoardManager="*res://Scripts/Singletons/BoardManager.gd"
 MaxArtificialIntelligence="*res://Scripts/Singletons/Max_AI.gd"
+GlobalSettings="*res://Scripts/Singletons/GlobalSettings.gd"
 
 [display]
 

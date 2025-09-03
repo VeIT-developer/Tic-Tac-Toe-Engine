@@ -4,7 +4,7 @@ extends Control
 #const MAIN_SCENE: PackedScene = preload("res://Scenes/main.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	visible = true
+	visible = false
 	text_control.modulate.a = 0
 	for i in range(50):
 		await get_tree().create_timer(0.05).timeout
