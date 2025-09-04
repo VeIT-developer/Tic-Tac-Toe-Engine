@@ -2,18 +2,7 @@ extends VBoxContainer
 
 @onready var start_game_button: Button = $NavigationButtons/StartGame
 
-#enum GAMEMODE {
-#	PvE,
-#	PvP_PC,
-#	EvE
-#}
-#
-#enum FIRST_MOVE {
-#	RANDOM,
-#	ENEMY,
-#	YOU
-#}
-
+# TODO: Сделать все преднастройки через синглтоны
 var current_mode := BoardManager.GAMEMODE.PvE
 var current_first_move := BoardManager.FIRST_MOVE.RANDOM
 var difficulty: int = 0

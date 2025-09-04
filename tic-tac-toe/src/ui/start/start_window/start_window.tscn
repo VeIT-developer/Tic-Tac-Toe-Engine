@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dc1plegu66ly"]
 
-[ext_resource type="Script" path="res://Scripts/Start_window.gd" id="1_xfo0y"]
+[ext_resource type="Script" path="res://tic-tac-toe/src/ui/start/start_window/start_window.gd" id="1_n76ww"]
 
 [sub_resource type="Theme" id="Theme_t3fro"]
 /colors/StartWindowMainColor = Color(0.882353, 0.882353, 0.882353, 1)
@@ -16,7 +16,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = SubResource("Theme_t3fro")
-script = ExtResource("1_xfo0y")
+script = ExtResource("1_n76ww")
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
