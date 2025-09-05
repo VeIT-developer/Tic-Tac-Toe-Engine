@@ -11,15 +11,15 @@ config_version=5
 [application]
 
 config/name="Tic-Tac-Toe AI"
-run/main_scene="res://Scenes/main.tscn"
+run/main_scene="res://game/src/ui/main_ui/main_ui.tscn"
 config/features=PackedStringArray("4.0", "Mobile")
 config/icon="res://icon.svg"
 
 [autoload]
 
-BoardManager="*res://Scripts/Singletons/BoardManager.gd"
-MaxArtificialIntelligence="*res://Scripts/Singletons/Max_AI.gd"
-GlobalSettings="*res://Scripts/Singletons/GlobalSettings.gd"
+BoardManager="*res://game/src/core/autoloads/game-logic/BoardManager.gd"
+MaxArtificialIntelligence="*res://game/src/core/autoloads/ai/MaxAI.gd"
+GlobalSettings="*res://game/src/core/autoloads/settings/GlobalSettings.gd"
 
 [display]
 

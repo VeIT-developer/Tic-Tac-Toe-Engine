@@ -1,0 +1,70 @@
+[gd_scene load_steps=4 format=3 uid="uid://dc1plegu66ly"]
+
+[ext_resource type="Script" path="res://game/src/ui/start/start_window/start_window.gd" id="1_bqc0f"]
+
+[sub_resource type="Theme" id="Theme_t3fro"]
+/colors/StartWindowMainColor = Color(0.882353, 0.882353, 0.882353, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw2h6"]
+bg_color = Color(0.498039, 0.498039, 0.498039, 1)
+
+[node name="StartWindow" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_t3fro")
+script = ExtResource("1_bqc0f")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_vw2h6")
+
+[node name="Text" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Text"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = 289.0
+offset_right = 1132.0
+offset_bottom = 327.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 25
+text = "Эта программа находится в стадии разработки, могут возникнуть ошибки"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Text"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.353
+anchor_right = 0.5
+anchor_bottom = 0.353
+offset_left = 133.0
+offset_top = 130.88
+offset_right = 980.0
+offset_bottom = 298.88
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.741176)
+theme_override_font_sizes/font_size = 120
+text = "ALPHA"
+horizontal_alignment = 1
+vertical_alignment = 1
